@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Stories</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 50%, #ffd4e8 100%);
+            min-height: 100vh;
+            color: #6b2c5c;
+            overflow-x: hidden;
+        }
+
+        .floating-hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 182, 193, 0.3);
+            font-size: 20px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            margin: 30px 0;
+            box-shadow: 0 20px 40px rgba(255, 182, 193, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #e91e63, #f06292, #f48fb1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 20px rgba(233, 30, 99, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px rgba(233, 30, 99, 0.5)); }
+            to { filter: drop-shadow(0 0 20px rgba(233, 30, 99, 0.8)); }
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #ad1457;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .audio-player {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(233, 30, 99, 0.2);
+            margin: 40px 0;
+            border: 2px solid rgba(255, 182, 193, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .audio-player:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(233, 30, 99, 0.3);
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .play-btn {
+            background: linear-gradient(45deg, #e91e63, #f06292);
+            border: none;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.4);
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(233, 30, 99, 0.6);
+        }
+
+        .progress-container {
+            flex: 1;
+            min-width: 200px;
+            margin: 0 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(233, 30, 99, 0.2);
+            border-radius: 4px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #e91e63, #f06292);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #ad1457;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(233, 30, 99, 0.3);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #e91e63;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .content-section {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 50px;
+            border-radius: 25px;
+            margin: 40px 0;
+            box-shadow: 0 20px 40px rgba(255, 182, 193, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .love-quote {
+            text-align: center;
+            font-size: 1.8em;
+            line-height: 1.6;
+            color: #6b2c5c;
+            font-style: italic;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .love-quote:before {
+            content: '"';
+            font-size: 4em;
+            color: rgba(233, 30, 99, 0.3);
+            position: absolute;
+            left: -30px;
+            top: -20px;
+        }
+
+        .love-quote:after {
+            content: '"';
+            font-size: 4em;
+            color: rgba(233, 30, 99, 0.3);
+            position: absolute;
+            right: -30px;
+            bottom: -40px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 10px 25px rgba(255, 182, 193, 0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(233, 30, 99, 0.5);
+            box-shadow: 0 20px 40px rgba(233, 30, 99, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #e91e63;
+        }
+
+        .feature-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #6b2c5c;
+        }
+
+        .feature-description {
+            color: #8e3a6f;
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #ad1457;
+            font-style: italic;
+        }
+
+        .music-note {
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 60%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            80% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            .subtitle { font-size: 1.2em; }
+            .audio-controls { flex-direction: column; }
+            .progress-container { margin: 20px 0; }
+            .love-quote { font-size: 1.4em; }
+            .love-quote:before, .love-quote:after { display: none; }
+            .content-section { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts" id="heartsContainer"></div>
+
+    <div class="container">
+        <header>
+            <h1>Love Stories</h1>
+            <p class="subtitle">Where Hearts Meet Music <span class="music-note">♪</span></p>
+        </header>
+
+        <div class="audio-player">
+            <div class="audio-controls">
+                <button class="play-btn" id="playBtn">▶</button>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress" id="progress"></div>
+                    </div>
+                    <div class="time-display">
+                        <span id="currentTime">0:00</span>
+                        <span id="duration">0:00</span>
+                    </div>
+                </div>
+
+                <div class="volume-control">
+                    <span>🔊</span>
+                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70">
+                </div>
+            </div>
+
+            <audio id="audioPlayer" preload="metadata">
+                <source src="./ghani.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="content-section">
+            <div class="love-quote">
+                Love is not just looking at each other, it's looking in the same direction together, sharing dreams, and creating beautiful memories with every heartbeat.
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">💕</div>
+                    <h3 class="feature-title">Romantic Melodies</h3>
+                    <p class="feature-description">Immerse yourself in carefully curated love songs that speak to the heart and soul, creating the perfect ambiance for romantic moments.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🌹</div>
+                    <h3 class="feature-title">Beautiful Stories</h3>
+                    <p class="feature-description">Discover enchanting tales of love and romance that will warm your heart and inspire your own love story.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">✨</div>
+                    <h3 class="feature-title">Magical Experience</h3>
+                    <p class="feature-description">Experience the magic of love through our elegant design and soothing atmosphere that celebrates the beauty of romance.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Made with 💖 for all the lovers in the world</p>
+    </footer>
+
+    <script>
+        // Audio player functionality
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progress = document.getElementById('progress');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const volumeSlider = document.getElementById('volumeSlider');
+
+        // Create a simple tone for demo purposes - removed
+        let isPlaying = false;
+
+        playBtn.addEventListener('click', function() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playBtn.textContent = '⏸';
+                isPlaying = true;
+            } else {
+                audioPlayer.pause();
+                playBtn.textContent = '▶';
+                isPlaying = false;
+            }
+        });
+
+        // Audio player events
+        audioPlayer.addEventListener('loadedmetadata', function() {
+            durationEl.textContent = formatTime(audioPlayer.duration);
+        });
+
+        audioPlayer.addEventListener('timeupdate', function() {
+            const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progress.style.width = progressPercent + '%';
+            currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+        });
+
+        audioPlayer.addEventListener('ended', function() {
+            playBtn.textContent = '▶';
+            isPlaying = false;
+            progress.style.width = '0%';
+            audioPlayer.currentTime = 0;
+        });
+
+        // Progress bar click
+        progressBar.addEventListener('click', function(e) {
+            const rect = progressBar.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const width = rect.width;
+            const clickTime = (clickX / width) * audioPlayer.duration;
+            audioPlayer.currentTime = clickTime;
+        });
+
+        volumeSlider.addEventListener('input', function() {
+            audioPlayer.volume = this.value / 100;
+        });
+
+        // Set initial volume
+        audioPlayer.volume = volumeSlider.value / 100;
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+
+        // Floating hearts animation
+        function createFloatingHearts() {
+            const heartsContainer = document.getElementById('heartsContainer');
+            const heartSymbols = ['💖', '💕', '💗', '💓', '💝'];
+
+            setInterval(() => {
+                if (heartsContainer.children.length < 10) {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = Math.random() * 100 + '%';
+                    heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+
+                    heartsContainer.appendChild(heart);
+
+                    setTimeout(() => {
+                        if (heart.parentNode) {
+                            heart.parentNode.removeChild(heart);
+                        }
+                    }, 6000);
+                }
+            }, 1000);
+        }
+
+        // Initialize floating hearts
+        createFloatingHearts();
+
+        // Add some interactive effects
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
